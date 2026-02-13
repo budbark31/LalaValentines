@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic - Patient Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --epic-blue: #005596;
+            --epic-light-blue: #d9e6f2;
+            --epic-bg: #f4f5f7;
+            --epic-border: #aebacd;
+            --epic-text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--epic-bg);
+            color: var(--epic-text);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* The classic dense Epic patient header */
+        .patient-header {
+            background-color: var(--epic-blue);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            border-bottom: 4px solid #ffcc00; /* Usually denotes active patient */
+        }
+
+        .patient-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .patient-name {
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .allergies {
+            background-color: #cc0000;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Main Workspace */
+        .workspace {
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--epic-border);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .panel-header {
+            background-color: var(--epic-light-blue);
+            padding: 8px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--epic-border);
+            color: var(--epic-blue);
+        }
+
+        .panel-content {
+            padding: 15px;
+            line-height: 1.6;
+        }
+
+        /* Orders Checklist */
+        .order-group {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background-color: #fafafa;
+            border: 1px solid #eee;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+
+        .order-item:hover {
+            background-color: var(--epic-light-blue);
+        }
+
+        input[type="checkbox"] {
+            margin-right: 15px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        label {
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* The Sign Button */
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-sign {
+            background-color: var(--epic-blue);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-sign:hover {
+            background-color: #00407a;
+        }
+
+        .btn-sign:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="patient-header">
+        <div class="patient-info">
+            <div class="patient-name">SHILO</div>
+            <div>Age: 21 y.o.</div>
+            <div>Sex: M</div>
+            <div>Wt: 85 kg</div>
+            <div class="allergies">ALLERGIES: NUTS, MAYO, COTTAGE CHEESE</div>
+        </div>
+        <div>Attending: RN LANA</div>
+    </div>
+
+    <div class="workspace">
+        
+        <div class="panel">
+            <div class="panel-header">H&P Notes (History and Physical)</div>
+            <div class="panel-content">
+                <strong>Chief Complaint:</strong> Patient presents to the unit complaining of being "hopelessly in love."<br><br>
+                <strong>History of Present Illness:</strong> Symptoms have been progressively worsening. Patient exhibits elevated heart rate when RN Lana enters the room. Vitals are otherwise stable, but patient requires immediate intervention to celebrate Valentine's Day.<br><br>
+                <strong>Diagnosis:</strong> Acute Affectionate Myocarditis (Code: V-DAY.14)
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">Treatment Plan / Order Entry</div>
+            <div class="panel-content">
+                <p><em>Please select the required interventions to stabilize the patient:</em></p>
+                
+                <div class="order-group">
+                    <div class="order-item">
+                        <input type="checkbox" id="order1">
+                        <label for="order1"><strong>Administer 1x Nice Dinner</strong> (Route: PO, Frequency: STAT)</label>
+                    </div>
+                    <div class="order-item">
+                        <input type="checkbox" id="order2">
+                        <label for="order2"><strong>Prescribe Movie Night</strong> (Dose: 1 film, Route: Couch)</label>
+                    </div>
+                    <div class="order-item">
+                        <input type="checkbox" id="order3">
+                        <label for="order3"><strong>Apply Flowers</strong> (Topical, apply directly to vase)</label>
+                    </div>
+                     <div class="order-item">
+                        <input type="checkbox" id="order4">
+                        <label for="order4"><strong>Mandatory Cat Cuddles</strong> (Continuous monitoring required)</label>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-sign" id="signBtn" onclick="signOrders()">Sign & Accept Orders</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function signOrders() {
+            // Check if at least one checkbox is checked
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            let isChecked = false;
+            checkboxes.forEach((cb) => {
+                if (cb.checked) isChecked = true;
+            });
+
+            if (!isChecked) {
+                alert("Clinical Warning: You must select at least one treatment before signing orders.");
+                return;
+            }
+
+            // Change button state
+            const btn = document.getElementById('signBtn');
+            btn.innerText = "Orders Signed - Happy Valentine's Day!";
+            btn.style.backgroundColor = "#2e7d32"; // Green success color
+            btn.disabled = true;
+
+            // Fire Confetti!
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+              var timeLeft = animationEnd - Date.now();
+
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+
+              var particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+              }));
+              confetti(Object.assign({}, defaults, { particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+              }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
