@@ -60,6 +60,8 @@
             padding: 20px;
             max-width: 900px;
             margin: 0 auto;
+            position: relative; /* Add this */
+            z-index: 10;        /* Add this */
         }
 
         .panel {
@@ -141,6 +143,34 @@
             background-color: #999;
             cursor: not-allowed;
         }
+        
+        /* Floating Background Hearts */
+        .floating-heart {
+            position: fixed;
+            z-index: 1; /* Keeps them behind the workspace panels */
+            pointer-events: none; /* Prevents them from interfering with clicks */
+            opacity: 0;
+            animation: floatUp ease-in forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(10vh) scale(0.5);
+            }
+            20% {
+                opacity: 0.6;
+                transform: translateY(0) scale(1);
+            }
+            80% {
+                opacity: 0.6;
+                transform: translateY(-20vh) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30vh) scale(0.5);
+            }
+        }
     </style>
 </head>
 <body>
@@ -200,6 +230,48 @@
     </div>
 
     <script>
+        // --- BACKGROUND HEARTS LOGIC ---
+        
+        // Change this variable to 'outline' if you want black hollow hearts
+        const heartType = 'solid'; 
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            
+            // Set the style based on your preference
+            if (heartType === 'solid') {
+                heart.innerText = '❤️';
+                heart.style.color = 'red';
+            } else {
+                heart.innerText = '♡';
+                heart.style.color = 'black';
+                heart.style.fontWeight = 'bold';
+            }
+            
+            // Randomize the size (between 15px and 45px)
+            const size = Math.random() * 30 + 15;
+            heart.style.fontSize = `${size}px`;
+            
+            // Randomize the starting position (anywhere on the screen width, random height)
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.top = `${Math.random() * 100}vh`;
+            
+            // Randomize how fast they float up and fade (between 4 and 8 seconds)
+            const duration = Math.random() * 4 + 4;
+            heart.style.animationDuration = `${duration}s`;
+
+            document.body.appendChild(heart);
+
+            // Remove the heart from the code after it finishes animating so the page doesn't lag
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Create a new heart every 600 milliseconds
+        setInterval(createHeart, 600);
+        
         function signOrders() {
             // Check if at least one checkbox is checked
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
